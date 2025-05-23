@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}My Topics - News Aggregator{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>My Topics</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'add_topic' %}" class="btn btn-primary">Add New Topic</a>
+    </div>
+</div>
+
+<div class="row">
+    {% if topics %}
+        <div class="col-md-12">
+            <div class="list-group">
+                {% for topic in topics %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">{{ topic.name }}</h5>
+                            <small class="text-muted">Added on {{ topic.created_at|date:"F j, Y" }}</small>
+                        </div>
+                        <form method="post" action="{% url 'remove_topic' topic.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove this topic?')">Remove</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                You haven't added any topics yet. Add a topic to start seeing personalized news.
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

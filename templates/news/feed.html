@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Your News Feed - News Aggregator{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Your Personalized News Feed</h2>
+        {% if not user.topics.all %}
+            <div class="alert alert-info">
+                You haven't added any topics yet. <a href="{% url 'add_topic' %}">Add topics</a> to see personalized news.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    {% if articles %}
+        {% for article in articles %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ article.source_name }} - {{ article.published_at|date:"F j, Y" }}</h6>
+                        <p class="card-text">{{ article.description|truncatewords:30 }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ article.url }}" class="btn btn-primary" target="_blank">Read Full Article</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        {% if user.topics.all %}
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    No articles found for your topics. Try adding more topics or check back later.
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
